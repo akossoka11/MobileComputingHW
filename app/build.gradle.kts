@@ -84,4 +84,8 @@ dependencies {
 
     // Jetpack Compose Integration
     implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
 }

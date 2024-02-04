@@ -1,5 +1,7 @@
 package com.example.myapplication
 
+import android.content.Context
+import android.net.Uri
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -23,20 +25,38 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 
 @Composable
 fun MessageCard(msg: Message) {
+    val context = LocalContext.current
+    val sharedPreferences = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
+    val lastImagePath = sharedPreferences.getString("lastImagePath", null)
+    val savedText = sharedPreferences.getString("savedText", "") ?: ""
     Row(modifier = Modifier.padding(all = 8.dp)) {
-        Image(
-            painter = painterResource(R.drawable.profile_picture),
-            contentDescription = "Contact profile picture",
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .border(1.5.dp, MaterialTheme.colorScheme.primary, CircleShape)
-        )
+        lastImagePath?.let { path ->
+            Image(
+                painter = rememberAsyncImagePainter(model = Uri.parse(path),),
+                contentDescription = "Contact profile picture",
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .border(1.5.dp, MaterialTheme.colorScheme.primary, CircleShape)
+            )
+        } ?: run {
+            // Placeholder content if lastImagePath is null
+            Image(
+                painter = painterResource(R.drawable.profile_picture),
+                contentDescription = "Contact profile picture",
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .border(1.5.dp, MaterialTheme.colorScheme.primary, CircleShape)
+            )
+        }
 
         Spacer(modifier = Modifier.width(8.dp))
 
@@ -47,9 +67,9 @@ fun MessageCard(msg: Message) {
         )
         Column(modifier = Modifier.clickable { isExpanded = !isExpanded }) {
             Text(
-                text = msg.author,
+                text = if (savedText.isNullOrEmpty()) "Name" else savedText,
                 color = MaterialTheme.colorScheme.secondary,
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.titleSmall,
             )
 
             Spacer(modifier = Modifier.height(4.dp))
