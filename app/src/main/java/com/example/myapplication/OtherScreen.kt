@@ -36,9 +36,10 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.padding
 
 @Composable
-fun OtherScreen(navController: NavController) {
+fun OtherScreen(navController: NavController, showNotification: () -> Unit) {
 
     fun saveImageToInternalStorage(uri: Uri, context: Context): String? {
         return try {
@@ -148,5 +149,11 @@ fun OtherScreen(navController: NavController) {
             label = { Text("Name") }
         )
 
+        Button(
+            onClick = showNotification,
+            modifier = Modifier.padding(top = 16.dp)
+        ) {
+            Text("Show Notification")
+        }
     }
 }

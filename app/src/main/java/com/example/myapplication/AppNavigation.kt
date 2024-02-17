@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun AppNavigation() {
+fun AppNavigation(showNotification: () -> Unit) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "conversation") {
@@ -14,7 +14,7 @@ fun AppNavigation() {
             ConversationScreen(navController, SampleData.conversationSample)
         }
         composable("other") {
-            OtherScreen(navController)
+            OtherScreen(navController, showNotification)
         }
     }
 }
